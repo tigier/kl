@@ -38,8 +38,9 @@ public class MainController {
      * @return true, falls ein neuer Nutzer hinzugefügt wurde, sonst false.
      */
     public boolean insertUser(String name){
-        //TODO 05: Nutzer dem sozialen Netzwerk hinzufügen.
-        return false;
+
+        return allUsers.addVertex(new Vertex(name));
+        //TODO 05: Nutzer dem sozialen Netzwerk hinzufügen.(done)
     }
 
     /**
@@ -48,8 +49,9 @@ public class MainController {
      * @return true, falls ein Nutzer gelöscht wurde, sonst false.
      */
     public boolean deleteUser(String name){
-        //TODO 07: Nutzer aus dem sozialen Netzwerk entfernen.
-        return false;
+
+        return allUsers.removeVertex(allUsers.getVertex(name));
+        //TODO 07: Nutzer aus dem sozialen Netzwerk entfernen.(done)
     }
 
     /**
@@ -57,7 +59,20 @@ public class MainController {
      * @return
      */
     public String[] getAllUsers(){
-        //TODO 06: String-Array mit allen Nutzernamen erstellen.
+
+        if(!allUsers.isEmpty()){
+            List<Vertex> help = allUsers.getVertices();
+            int i = getVertexAmount();
+            String[] out = new String[i];
+            help.toFirst();
+            for(int j = 0; j < i; j++){
+                out[j] = help.getContent().getID();
+                help.next();
+            }
+
+            return out;
+        }
+        //TODO 06: String-Array mit allen Nutzernamen erstellen.(done)
         return null;
     }
 
@@ -67,7 +82,25 @@ public class MainController {
      * @return
      */
     public String[] getAllFriendsFromUser(String name){
-        //TODO 09: Freundesliste eines Nutzers als String-Array erstellen.
+
+        if(name != null){
+            int i = 0;
+            List<Vertex> help = allUsers.getNeighbours(allUsers.getVertex(name));
+            help.toFirst();
+            while(help.hasAccess()){
+                i++;
+                help.next();
+            }
+            String[] out = new String[i];
+            help.toFirst();
+            for(int j = 0; j < i; j++){
+                out[j] = help.getContent().getID();
+                help.next();
+            }
+
+            return out;
+        }
+        //TODO 09: Freundesliste eines Nutzers als String-Array erstellen.(done)
         return null;
     }
 
@@ -79,8 +112,8 @@ public class MainController {
      * @return
      */
     public double centralityDegreeOfUser(String name){
-        //TODO 10: Prozentsatz der vorhandenen Freundschaften eines Nutzers von allen möglichen Freundschaften des Nutzers.
-        return 0.125456;
+        //TODO 10: Prozentsatz der vorhandenen Freundschaften eines Nutzers von allen möglichen Freundschaften des Nutzers.(done)
+        return (double) getAllFriendsFromUser(name).length / (getVertexAmount() - 1);
     }
 
     /**
@@ -90,8 +123,9 @@ public class MainController {
      * @return true, falls eine neue Freundeschaft entstanden ist, ansonsten false.
      */
     public boolean befriend(String name01, String name02){
-        //TODO 08: Freundschaften schließen.
-        return false;
+
+        return allUsers.addEdge(new Edge(allUsers.getVertex(name01), allUsers.getVertex(name02), 0));
+        //TODO 08: Freundschaften schließen.(done)
     }
 
     /**
@@ -101,8 +135,8 @@ public class MainController {
      * @return true, falls ihre Freundschaft beendet wurde, ansonsten false.
      */
     public boolean unfriend(String name01, String name02){
-        //TODO 11: Freundschaften beenden.
-        return false;
+        return allUsers.removeEdge(allUsers.getEdge(allUsers.getVertex(name01), allUsers.getVertex(name02)));
+        //TODO 11: Freundschaften beenden.(done)
     }
 
     /**
@@ -111,12 +145,23 @@ public class MainController {
      * @return
      */
     public double dense(){
-        //TODO 12: Dichte berechnen.
-        return 0.12334455676;
+        double i = 0;
+        List<Edge> help = allUsers.getEdges();
+        while(help.hasAccess()){
+            i++;
+            help.next();
+        }
+
+        double k = 0;
+        for(int l = 0; l < (getVertexAmount()); l++){
+            k += l;
+        }
+        //TODO 12: Dichte berechnen.(done)
+        return i / k;
     }
 
     /**
-     * Gibt die möglichen Verbindungen zwischen zwei Personen im sozialen Netzwerk als Stirng-Array zurück,
+     * Gibt die möglichen Verbindungen zwischen zwei Personen im sozialen Netzwerk als String-Array zurück,
      * falls die Personen vorhanden sind und sie über eine oder mehrere Ecken miteinander verbunden sind.
      * @param name01
      * @param name02
@@ -125,9 +170,34 @@ public class MainController {
     public String[] getLinksBetween(String name01, String name02){
         Vertex user01 = allUsers.getVertex(name01);
         Vertex user02 = allUsers.getVertex(name02);
+
+        user01.setMark(true);
+        user02.setMark(true);
+        String[] out  = new String[getVertexAmount()];
         if(user01 != null && user02 != null){
-            //TODO 13: Schreibe einen Algorithmus, der mindestens ein Verbindung von einem Nutzer über Zwischennutzer zu einem anderem Nutzer bestimmt. Happy Kopfzerbrechen!
+
+            for(int i = 0; i < allUsers.amountOfNeighbours(user01); i++){
+                if(allUsers.getNeighbourAt(user01, i) == user02){
+                    out[0] = name01;
+                    out[1] = name02;
+                    break;
+                }
+            }
+
+            //TODO 13: Schreibe einen Algorithmus, der mindestens eine Verbindung von einem Nutzer über Zwischennutzer zu einem anderem Nutzer bestimmt. Happy Kopfzerbrechen!
         }
+        allUsers.setAllVertexMarks(false);
         return null;
+    }
+
+    public int getVertexAmount(){
+        int i = 0;
+        List<Vertex> help = allUsers.getVertices();
+        help.toFirst();
+        while(help.hasAccess()){
+            i++;
+            help.next();
+        }
+        return i;
     }
 }

@@ -42,7 +42,12 @@ public class Graph{
     //Eine neue Liste mit allen Vertex-Objekten erstellen.
     List<Vertex> result = new List<Vertex>();
 
-    //TODO 01: Einmal Liste kopieren, bitte! Warum eigentlich kopieren? (O_o)
+    vertices.toFirst();
+    while(vertices.hasAccess()){
+      result.append(vertices.getContent());
+      vertices.next();
+    }
+    //TODO 01: Einmal Liste kopieren, bitte! Warum eigentlich kopieren? (O_o)(done)
 
     //Aktuelles Element zum Anfang bewegen.
     result.toFirst();
@@ -58,7 +63,12 @@ public class Graph{
     //Eine neue Liste mit allen Edge-Objekten erstellen.
     List<Edge> result = new List<Edge>();
 
-    //TODO 02: Und nochmal kopieren.
+    edges.toFirst();
+    while (edges.hasAccess()){
+      result.append(edges.getContent());
+      edges.next();
+    }
+    //TODO 02: Und nochmal kopieren.(done)
 
     //Aktuelles Element zum Anfang bewegen.
     result.toFirst();
@@ -72,7 +82,18 @@ public class Graph{
    */
   public Vertex getVertex(String pID){
 
-    //TODO 03: Knoten-Objekt finden.
+      if(pID != null) {
+          List<Vertex> help = getVertices();
+          help.toFirst();
+          while (help.hasAccess()){
+              if(pID.equals(help.getContent().getID())){
+                  return help.getContent();
+              }
+              help.next();
+          }
+
+      }
+    //TODO 03: Knoten-Objekt finden.(done)
 
     return null;
   }
@@ -82,15 +103,20 @@ public class Graph{
    * Knoten mit demselben ID-Eintrag wie pVertex im Graphen gibt und pVertex eine ID ungleich null hat. 
    * Ansonsten passiert nichts.
    */
-  public void addVertex(Vertex pVertex){
-    //TODO 04: Neues Knoten-Objekt hinzufügen.
+  public boolean addVertex(Vertex pVertex){
+      if(getVertex(pVertex.getID()) == null && pVertex.getID() != null){
+          vertices.append(pVertex);
+          return true;
+      }
+      return false;
+    //TODO 04: Neues Knoten-Objekt hinzufügen.(done)
   }
 
   /**
    * Der Auftrag fuegt die Kante pEdge in den Graphen ein, sofern beide durch die Kante verbundenen Knoten
    * im Graphen enthalten sind, nicht identisch sind und noch keine Kante zwischen den Knoten existiert. Ansonsten passiert nichts.
    */
-  public void addEdge(Edge pEdge){ 
+  public boolean addEdge(Edge pEdge){
     //Pruefen, ob pEdge exisitert.
     if (pEdge != null){  
       Vertex[] vertexPair = pEdge.getVertices();
@@ -102,16 +128,18 @@ public class Graph{
       this.getEdge(vertexPair[0], vertexPair[1]) == null && 
       vertexPair[0] != vertexPair[1]){
         //Kante einfuegen.
-        edges.append(pEdge); 
+        edges.append(pEdge);
+        return true;
       }
     }
+    return false;
   }
 
   /**
    * Der Auftrag entfernt den Knoten pVertex aus dem Graphen und loescht alle Kanten, die mit ihm inzident sind.
    * Ist der Knoten pVertex nicht im Graphen enthalten, passiert nichts.
    */
-  public void removeVertex(Vertex pVertex){
+  public boolean removeVertex(Vertex pVertex){
     //Inzidente Kanten entfernen.
     edges.toFirst();
     while (edges.hasAccess()){
@@ -130,23 +158,27 @@ public class Graph{
     }
     if (vertices.hasAccess()){
       vertices.remove();
+      return true;
     }
+    return false;
   }
 
   /**
    * Der Auftrag entfernt die Kante pEdge aus dem Graphen. Ist die Kante pEdge nicht 
    * im Graphen enthalten, passiert nichts.
    */
-  public void removeEdge(Edge pEdge){
+  public boolean removeEdge(Edge pEdge){
     //Kante aus Kantenliste des Graphen entfernen.
     edges.toFirst();
     while (edges.hasAccess()){
       if (edges.getContent() == pEdge){
         edges.remove();
+        return true;
       } else {
         edges.next();
       }
     }
+    return false;
   }
 
   /**
@@ -227,6 +259,20 @@ public class Graph{
     return result;
   }
 
+  public Vertex getNeighbourAt(Vertex vertex, int index){
+      List<Vertex> help = getNeighbours(vertex);
+      Vertex out = null;
+      help.toFirst();
+      if(help.hasAccess()){
+          for(int i = 0; i <= index; i++){
+              out = help.getContent();
+              help.next();
+          }
+          return out;
+      }
+      return null;
+  }
+
   /**
    * Die Anfrage liefert eine neue Liste alle inzidenten Kanten zum Knoten pVertex. Hat der Knoten
    * pVertex keine inzidenten Kanten in diesem Graphen oder ist gar nicht in diesem Graphen enthalten, so 
@@ -283,6 +329,18 @@ public class Graph{
    */
   public boolean isEmpty(){
     return vertices.isEmpty();
-  } 
+  }
+
+  public int amountOfNeighbours(Vertex vertex){
+    List<Vertex> help = getNeighbours(vertex);
+
+    int i = 0;
+      help.toFirst();
+      while(help.hasAccess()){
+          i++;
+          help.next();
+      }
+      return i;
+  }
 
 }

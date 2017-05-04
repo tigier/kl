@@ -3,7 +3,7 @@
   <grid id="27dc6" binding="panel" layout-manager="GridLayoutManager" row-count="9" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
     <margin top="0" left="0" bottom="0" right="0"/>
     <constraints>
-      <xy x="20" y="20" width="773" height="400"/>
+      <xy x="20" y="20" width="773" height="484"/>
     </constraints>
     <properties/>
     <border type="none"/>
@@ -25,6 +25,7 @@
           <component id="3bf4d" class="javax.swing.JTextArea" binding="output">
             <constraints/>
             <properties>
+              <editable value="false"/>
               <font name="Courier New" size="14"/>
             </properties>
           </component>
@@ -36,7 +37,7 @@
         </constraints>
         <properties>
           <font size="18" style="1"/>
-          <text value="Informationen zum SN"/>
+          <text value="Informationen zum ASN"/>
         </properties>
       </component>
       <component id="d66fc" class="javax.swing.JLabel">
@@ -45,7 +46,7 @@
         </constraints>
         <properties>
           <font size="18" style="1"/>
-          <text value="Interaktion mit dem SN"/>
+          <text value="Interaktion mit dem ASN"/>
         </properties>
       </component>
       <component id="47397" class="javax.swing.JLabel">
@@ -54,7 +55,7 @@
         </constraints>
         <properties>
           <font size="12" style="1"/>
-          <text value="Person im SN:"/>
+          <text value="Person im ASN:"/>
         </properties>
       </component>
       <component id="3302f" class="javax.swing.JTextField" binding="personInSN">
@@ -169,7 +170,8 @@
           <component id="5c9be" class="javax.swing.JTextArea" binding="systemOutput">
             <constraints/>
             <properties>
-              <text value="Herzlich willkommen zum Sozialen Netzwerk."/>
+              <editable value="false"/>
+              <text value="Herzlich willkommen zum Asozialen Netzwerk."/>
             </properties>
           </component>
         </children>

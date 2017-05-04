@@ -19,7 +19,7 @@ public class InteractionPanelHandler {
     private JButton insertButton;
     private JTextField friendInSN;
     private JButton newFriendshipButton;
-    private JButton killFriendshipButton;
+    private JButton killFriendshipButton; //are you serious????
     private JTextField personFrom;
     private JTextField personTo;
     private JButton searchButton;
@@ -93,7 +93,7 @@ public class InteractionPanelHandler {
                     String friend = friendInSN.getText();
                     if(mainController.unfriend(person, friend)){
                         update();
-                        addToSysoutput("Die Freundschaft der Nutzer " + person + " und " + friend + " wurde beendet. Böse Welt!");
+                        addToSysoutput("Die Freundschaft der Nutzer " + person + " und " + friend + " wurde beendet. Denn " + person + " war ein Arschloch zu " + friend + " und hat sie/ihn nur für Sex ausgenutzt.");
                     }else{
                         addToSysoutput("Der Nutzer " + person + " oder der Nutzer " + friend + " existiert nicht oder sie waren vorher schon nicht befreundet. Der Graph wurde nicht verändert.");
                     }
@@ -201,4 +201,5 @@ public class InteractionPanelHandler {
     private void addToSysoutput(String text){
         systemOutput.setText(systemOutput.getText()+"\n"+text);
     }
+
 }
