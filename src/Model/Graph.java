@@ -103,12 +103,10 @@ public class Graph{
    * Knoten mit demselben ID-Eintrag wie pVertex im Graphen gibt und pVertex eine ID ungleich null hat. 
    * Ansonsten passiert nichts.
    */
-  public boolean addVertex(Vertex pVertex){
-      if(getVertex(pVertex.getID()) == null && pVertex.getID() != null){
+  public void addVertex(Vertex pVertex){
+      if(pVertex != null && pVertex.getID() != null && getVertex(pVertex.getID()) == null){
           vertices.append(pVertex);
-          return true;
       }
-      return false;
     //TODO 04: Neues Knoten-Objekt hinzufügen.(done)
   }
 
@@ -259,19 +257,7 @@ public class Graph{
     return result;
   }
 
-  public Vertex getNeighbourAt(Vertex vertex, int index){
-      List<Vertex> help = getNeighbours(vertex);
-      Vertex out = null;
-      help.toFirst();
-      if(help.hasAccess()){
-          for(int i = 0; i <= index; i++){
-              out = help.getContent();
-              help.next();
-          }
-          return out;
-      }
-      return null;
-  }
+
 
   /**
    * Die Anfrage liefert eine neue Liste alle inzidenten Kanten zum Knoten pVertex. Hat der Knoten
@@ -331,16 +317,6 @@ public class Graph{
     return vertices.isEmpty();
   }
 
-  public int amountOfNeighbours(Vertex vertex){
-    List<Vertex> help = getNeighbours(vertex);
 
-    int i = 0;
-      help.toFirst();
-      while(help.hasAccess()){
-          i++;
-          help.next();
-      }
-      return i;
-  }
 
 }

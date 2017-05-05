@@ -38,8 +38,11 @@ public class MainController {
      * @return true, falls ein neuer Nutzer hinzugefügt wurde, sonst false.
      */
     public boolean insertUser(String name){
-
-        return allUsers.addVertex(new Vertex(name));
+        if(name != null && allUsers.getVertex(name) == null) {
+            allUsers.addVertex(new Vertex(name));
+            return true;
+        }
+        return false;
         //TODO 05: Nutzer dem sozialen Netzwerk hinzufügen.(done)
     }
 
@@ -49,8 +52,11 @@ public class MainController {
      * @return true, falls ein Nutzer gelöscht wurde, sonst false.
      */
     public boolean deleteUser(String name){
-
-        return allUsers.removeVertex(allUsers.getVertex(name));
+        if(name != null && allUsers.getVertex(name) != null) {
+            allUsers.removeVertex(allUsers.getVertex(name));
+            return true;
+        }
+        return false;
         //TODO 07: Nutzer aus dem sozialen Netzwerk entfernen.(done)
     }
 
@@ -170,23 +176,31 @@ public class MainController {
     public String[] getLinksBetween(String name01, String name02){
         Vertex user01 = allUsers.getVertex(name01);
         Vertex user02 = allUsers.getVertex(name02);
-
-        user01.setMark(true);
-        user02.setMark(true);
-        String[] out  = new String[getVertexAmount()];
-        if(user01 != null && user02 != null){
-
-            for(int i = 0; i < allUsers.amountOfNeighbours(user01); i++){
-                if(allUsers.getNeighbourAt(user01, i) == user02){
-                    out[0] = name01;
-                    out[1] = name02;
-                    break;
+        if(!lookForPath(user01, user02)) {
+            user01.setMark(true);
+            user02.setMark(true);
+            String[] out = new String[getVertexAmount()];
+            out[0] = name01;
+            if (user01 != null && user02 != null) {
+                for (int i = 0; i < amountOfNeighbours(user01); i++) {
+                    if (getNeighbourAt(user01, i) == user02) {
+                        out[1] = name02;
+                        return cut(out);
+                    }
                 }
-            }
+                for(int i = 0; i < getVertexAmount() - 1; i++){
+                    if(out[i] == null){
+                        break;
+                    }
+                    for(int j = 0; j < amountOfNeighbours(allUsers.getVertex(out[i])); j++){
+                        if(lookForPath(getNeighbourAt(allUsers.getVertex(out[i]), j),user02)){
 
-            //TODO 13: Schreibe einen Algorithmus, der mindestens eine Verbindung von einem Nutzer über Zwischennutzer zu einem anderem Nutzer bestimmt. Happy Kopfzerbrechen!
+                        }
+                    }
+                }
+                //TODO 13: Schreibe einen Algorithmus, der mindestens eine Verbindung von einem Nutzer über Zwischennutzer zu einem anderem Nutzer bestimmt. Happy Kopfzerbrechen!
+            }
         }
-        allUsers.setAllVertexMarks(false);
         return null;
     }
 
@@ -199,5 +213,56 @@ public class MainController {
             help.next();
         }
         return i;
+    }
+
+    public int amountOfNeighbours(Vertex vertex){
+        List<Vertex> help = allUsers.getNeighbours(vertex);
+
+        int i = 0;
+        help.toFirst();
+        while(help.hasAccess()){
+            i++;
+            help.next();
+        }
+        return i;
+    }
+
+    public Vertex getNeighbourAt(Vertex vertex, int index){
+        List<Vertex> help = allUsers.getNeighbours(vertex);
+        Vertex out = null;
+        help.toFirst();
+        if(help.hasAccess()){
+            for(int i = 0; i <= index; i++){
+                out = help.getContent();
+                help.next();
+            }
+            return out;
+        }
+        return null;
+    }
+
+    public boolean lookForPath(Vertex user1, Vertex user2){
+        for(int i = 0; i < amountOfNeighbours(user1); i++){
+            for(int j = 0; j < amountOfNeighbours(getNeighbourAt(user1, i)); j++){
+                if(getNeighbourAt(getNeighbourAt(user1, i),j) == user2){
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public String[] cut(String[] array){
+        String[] help = array;
+        for(int i = 0; i < help.length; i++){
+            if(help[i] == null){
+                String[] a = new String[i];
+                for(int j = i-1; j != -1; j--){
+                    a[j] = help[j];
+                }
+                return a;
+            }
+        }
+        return help;
     }
 }
